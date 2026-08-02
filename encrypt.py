@@ -17,7 +17,7 @@ key = base64.urlsafe_b64encode(password.encode().ljust(32)[:32])  # very naive b
 f = Fernet(key)
 
 # Encrypt
-with open("together_clean.pickle", "rb") as f_in, open("together_clean.pickle.enc", "wb") as f_out:
+with open("accumulated.zip", "rb") as f_in, open("accumulated.zip.enc", "wb") as f_out:
     f_out.write(f.encrypt(f_in.read()))
 
 # Decrypt
