@@ -12,12 +12,12 @@ def make_float(results):
             results[k][k1] = v1.sort_index()
     return results
 
-password = ""
+password = "Shubh@5796"
 key = base64.urlsafe_b64encode(password.encode().ljust(32)[:32])  # very naive but works
 f = Fernet(key)
 
 # Encrypt
-with open("accumulated2.zip", "rb") as f_in, open("accumulated2.zip.enc", "wb") as f_out:
+with open("models.zip", "rb") as f_in, open("models.zip.enc", "wb") as f_out:
     f_out.write(f.encrypt(f_in.read()))
 
 # Decrypt

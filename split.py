@@ -27,4 +27,4 @@ def split_file(input_path: str, n: int):
 
 # Example usage
 if __name__ == "__main__":
-    split_file("accumulated2.zip.enc", 4)   # change 4 to 3, 5 or 6 as needed
+    split_file("models.zip.enc", 4)   # change 4 to 3, 5 or 6 as needed
