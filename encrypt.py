@@ -12,7 +12,7 @@ def make_float(results):
             results[k][k1] = v1.sort_index()
     return results
 
-password = "Shubh@5796"
+password = ""
 key = base64.urlsafe_b64encode(password.encode().ljust(32)[:32])  # very naive but works
 f = Fernet(key)
 
