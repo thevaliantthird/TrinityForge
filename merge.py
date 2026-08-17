@@ -1,50 +1,41 @@
-import os
 import glob
+import os
 
-def merge_files(output_path: str, n: int = None):
+def merge_file(input_path: str, output_path: str = None):
     """
-    Merge sequential .part0, .part1, ... files back into one file.
-    
-    If n is given, it looks for exactly that many parts.
-    If n is None, it automatically finds all consecutive .partN files.
+    Reassemble a file previously split by split_file().
+    Looks for files named: input_path.part00, input_path.part01, ...
+    and concatenates them in numeric order into output_path
+    (defaults to input_path itself if not given).
     """
-    # Find all part files
-    base = output_path
-    # Remove any existing extension so we can rebuild correctly
-    if base.endswith(".bin") or base.endswith(".exe") or "." in os.path.basename(base):
-        # Keep the original name the user wants
-        pass
+    if output_path is None:
+        output_path = input_path
 
-    parts = []
-    i = 0
-    while True:
-        part_name = f"{output_path}.part{i}"
-        if not os.path.exists(part_name):
-            break
-        parts.append(part_name)
-        i += 1
-        if n is not None and i >= n:
-            break
+    pattern = f"{input_path}.part*"
+    parts = glob.glob(pattern)
 
     if not parts:
-        raise FileNotFoundError(f"No part files found for {output_path}")
+        raise FileNotFoundError(f"No part files found matching: {pattern}")
 
-    print(f"Found {len(parts)} parts. Merging...")
+    # Sort numerically by the suffix after "part", not alphabetically,
+    # so this works regardless of zero-padding width.
+    def part_index(p):
+        suffix = p[len(f"{input_path}.part"):]
+        return int(suffix)
 
-    with open(output_path, "wb") as outfile:
-        for part in parts:
-            with open(part, "rb") as infile:
-                data = infile.read()
-                outfile.write(data)
-                print(f"  Added {part} ({len(data)} bytes)")
+    parts.sort(key=part_index)
 
-    print(f"\nMerged successfully → {output_path}")
-    print(f"Final size: {os.path.getsize(output_path)} bytes")
+    total_bytes = 0
+    with open(output_path, "wb") as out:
+        for part_name in parts:
+            with open(part_name, "rb") as part:
+                data = part.read()
+                out.write(data)
+                total_bytes += len(data)
+            print(f"Merged: {part_name} ({len(data)} bytes)")
+
+    print(f"\nDone. Reassembled {len(parts)} parts into {output_path} ({total_bytes} bytes total).")
 
 
-# Example usage
 if __name__ == "__main__":
-    # After splitting "yourfile.bin" you would run:
-    merge_files("yourfile.bin")          # auto-detects number of parts
-    # or
-    # merge_files("yourfile.bin", n=4)   # if you want to force exactly 4 parts
+    merge_file("init_fx_ranker.zip.enc")
