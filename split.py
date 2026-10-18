@@ -29,4 +29,4 @@ def split_file(input_path: str, n: int):
 
 
 if __name__ == "__main__":
-    split_file("neer_strat.zip.enc", 50)
+    split_file("NEER_dashboard_v14.zip.enc", 30)
