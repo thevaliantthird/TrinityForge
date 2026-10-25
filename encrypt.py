@@ -17,7 +17,7 @@ key = base64.urlsafe_b64encode(password.encode().ljust(32)[:32])  # very naive b
 f = Fernet(key)
 
 # Encrypt
-with open("NEER_dashboard_v14.zip", "rb") as f_in, open("NEER_dashboard_v14.zip.enc", "wb") as f_out:
+with open("NEER_Dashboard.zip", "rb") as f_in, open("NEER_Dashboard.zip.enc", "wb") as f_out:
     f_out.write(f.encrypt(f_in.read()))
 
 # Decrypt
